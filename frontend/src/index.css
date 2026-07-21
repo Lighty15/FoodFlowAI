@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  font-family: 'Inter', sans-serif;
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+  margin: 0;
+}
+
+* { box-sizing: border-box; }
+
+::selection {
+  background: rgba(22, 163, 74, 0.2);
+  color: #0f172a;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-600 to-blue-600 px-4 py-2.5 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:shadow-xl;
+}
+
+.card-surface {
+  @apply rounded-[24px] border border-slate-200/80 bg-white/80 shadow-[0_18px_48px_-24px_rgba(15,23,42,0.35)] backdrop-blur;
+}

@@ -1,0 +1,22 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+dist/
+
+# Environment
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Database
+*.db
