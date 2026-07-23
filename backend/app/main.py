@@ -1,16 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Import DB and models BEFORE create_all
-from backend.app.db import models
+from backend.app.db.database import engine
 from backend.app.db.base import Base
-from backend.app.db.session import engine
+from backend.app.db import models
 
-from backend.app.api import donations, auth, admin
-
-# Create all tables automatically on startup
 Base.metadata.create_all(bind=engine)
 
+from backend.app.api import auth, donations, admin, users, food, notifications
 app = FastAPI(title="FoodFlowAI Backend")
 
 app.add_middleware(
@@ -28,7 +25,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth")
 app.include_router(donations.router, prefix="/api")
 app.include_router(admin.router, prefix="/api/admin")
-
+app.include_router(users.router, prefix="/api/users")       
 @app.get("/")
 async def root():
     return {"message": "FoodFlowAI Backend is running"}
