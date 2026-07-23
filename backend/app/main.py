@@ -1,11 +1,14 @@
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+# Import DB and models BEFORE create_all
+from backend.app.db import models
 from backend.app.db.base import Base
 from backend.app.db.session import engine
 
 from backend.app.api import donations, auth, admin
 
+# Create all tables automatically on startup
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FoodFlowAI Backend")
@@ -15,7 +18,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://food-flow-ai-mu.vercel.app",  
+        "https://food-flow-ai-mu.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -25,6 +28,10 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth")
 app.include_router(donations.router, prefix="/api")
 app.include_router(admin.router, prefix="/api/admin")
+
+@app.get("/")
+async def root():
+    return {"message": "FoodFlowAI Backend is running"}
 
 @app.get("/health")
 async def health():
