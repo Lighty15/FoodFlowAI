@@ -5,7 +5,11 @@ from backend.app.db.session import engine
 from backend.app.db.base import Base
 from backend.app.db import models
 
+# Import routers
+from backend.app.api import auth, donations, admin
+
 Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="FoodFlowAI Backend")
 
 app.add_middleware(
@@ -23,7 +27,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth")
 app.include_router(donations.router, prefix="/api")
 app.include_router(admin.router, prefix="/api/admin")
-app.include_router(users.router, prefix="/api/users")       
+
 @app.get("/")
 async def root():
     return {"message": "FoodFlowAI Backend is running"}
