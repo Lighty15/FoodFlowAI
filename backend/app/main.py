@@ -1,13 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.db.database import engine
+from backend.app.db.session import engine
 from backend.app.db.base import Base
 from backend.app.db import models
 
 Base.metadata.create_all(bind=engine)
-
-from backend.app.api import auth, donations, admin, users, food, notifications
 app = FastAPI(title="FoodFlowAI Backend")
 
 app.add_middleware(
