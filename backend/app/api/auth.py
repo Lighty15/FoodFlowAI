@@ -22,42 +22,35 @@ class UserCreate(BaseModel):
     role: str = 'donor'
 
 
-@router.post('/register', response_model=dict)
-@router.post('/register', response_model=dict)
+@router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    existing = auth_service.get_user_by_username(db, user.username)
+    try:
+        existing = auth_service.get_user_by_username(db, user.username)
 
-    if existing:
-        raise HTTPException(
-            status_code=400,
-            detail='Username already registered'
+        if existing:
+            raise HTTPException(status_code=400, detail="Username already exists")
+
+        hashed = auth_service.get_password_hash(user.password)
+
+        db_user = models.User(
+            username=user.username,
+            hashed_password=hashed,
+            role=user.role,
         )
 
-    hashed = auth_service.get_password_hash(user.password)
-
-    db_user = models.User(
-        username=user.username,
-        hashed_password=hashed,
-        role=user.role
-    )
-
-    try:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
 
         return {
-            'username': db_user.username,
-            'role': db_user.role
+            "username": db_user.username,
+            "role": db_user.role,
         }
 
     except Exception as e:
-        db.rollback()
-        print("REGISTER ERROR:", e)
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Internal server error")
 @router.post('/token', response_model=Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth_service.authenticate_user(db, form_data.username, form_data.password)
